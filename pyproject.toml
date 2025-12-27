@@ -2,6 +2,7 @@
 name = "social_engager"
 version = "0.1.0"
 description = "A deep research agent that discovers trending positive news in AI, Science, and Technology, and automatically posts to X daily"
+license = "MIT"
 requires-python = ">=3.11,<3.14"
 dependencies = [
     "azure-functions>=1.17.0",
