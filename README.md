@@ -1,4 +1,4 @@
-# Social Engager
+# Social Engager Deep Research Agent
 
 An AI-powered deep research agent that discovers trending positive news in AI, Science, and Technology, researches topics thoroughly, generates engaging tweets, and automatically posts to X daily.
 
