@@ -1,0 +1,51 @@
+[project]
+name = "social_engager"
+version = "0.1.0"
+description = "A deep research agent that discovers trending positive news in AI, Science, and Technology, and automatically posts to X daily"
+requires-python = ">=3.11,<3.14"
+dependencies = [
+    "azure-functions>=1.17.0",
+    "langgraph>=1.0.0",
+    "langchain>=0.3.0",
+    "langchain-openai>=0.3.0",
+    "langchain-community>=0.3.0",
+    "pydantic>=2.0.0",
+    "tavily-python>=0.5.0",
+    "tweepy>=4.14.0",
+    "python-dotenv>=1.0.0",
+    "rich>=13.0.0",
+]
+
+[project.optional-dependencies]
+dev = ["mypy>=1.11.1", "ruff>=0.6.1", "pytest>=8.0.0"]
+
+[project.scripts]
+social-engager = "social_engager.cli:main"
+
+[build-system]
+requires = ["setuptools>=73.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["social_engager"]
+
+[tool.setuptools.package-dir]
+"social_engager" = "src/social_engager"
+
+[tool.setuptools.package-data]
+"*" = ["py.typed"]
+
+[tool.ruff]
+lint.select = [
+    "E",    # pycodestyle
+    "F",    # pyflakes
+    "I",    # isort
+    "UP",   # pyupgrade
+]
+lint.ignore = [
+    "E501",  # line too long
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["D", "UP"]
+
