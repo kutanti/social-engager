@@ -1,12 +1,13 @@
 """State definitions for the trend discovery phase."""
 
 import operator
-from typing import Literal
 
 from langchain_core.messages import BaseMessage
 from langgraph.graph.message import add_messages
 from pydantic import BaseModel, Field
 from typing_extensions import Annotated, TypedDict
+
+from social_engager.utils import TopicCategory
 
 
 class DiscoveryState(TypedDict):
@@ -44,7 +45,7 @@ class DiscoveredTopic(BaseModel):
     """Schema for a discovered trending topic."""
 
     title: str = Field(description="The topic title or headline")
-    category: Literal["ai", "science", "technology", "positive_news"] = Field(
+    category: TopicCategory = Field(
         description="The category this topic belongs to"
     )
     relevance_score: int = Field(
@@ -60,7 +61,7 @@ class TopicSelection(BaseModel):
     """Schema for the final topic selection."""
 
     selected_topic: str = Field(description="The selected topic to research and tweet about")
-    topic_category: Literal["ai", "science", "technology", "positive_news"] = Field(
+    topic_category: TopicCategory = Field(
         description="The category of the selected topic"
     )
     topic_context: str = Field(

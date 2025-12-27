@@ -1,6 +1,6 @@
 """Trend Discovery Agent for finding positive trending news.
 
-This agent searches for trending topics in AI, Science, and Technology,
+This agent searches for trending topics in AI and Technology,
 filtering for positive and constructive content suitable for social media.
 """
 
@@ -18,7 +18,7 @@ from social_engager.states.discovery_state import (
     TopicSelection,
 )
 from social_engager.tools import tavily_news_search, think_tool
-from social_engager.utils import get_smart_model, get_today_str
+from social_engager.utils import FALLBACK_TOPICS, get_smart_model, get_today_str, get_topic_names_display
 
 # Configuration
 discovery_model = get_smart_model()
@@ -26,36 +26,12 @@ tools = [tavily_news_search, think_tool]
 tools_by_name = {tool.name: tool for tool in tools}
 model_with_tools = discovery_model.bind_tools(tools)
 
-# Fallback topics for thought leadership when no trending news is found
-FALLBACK_TOPICS = [
-    {
-        "topic": "The future of AI agents in everyday applications",
-        "category": "ai",
-        "context": "AI agents are becoming more capable and integrated into daily workflows. Explore recent developments and their implications.",
-    },
-    {
-        "topic": "Recent breakthroughs in renewable energy technology",
-        "category": "technology",
-        "context": "Clean energy innovations continue to accelerate. Highlight positive developments in solar, wind, or battery technology.",
-    },
-    {
-        "topic": "How AI is accelerating scientific discovery",
-        "category": "science",
-        "context": "AI tools are helping scientists make discoveries faster. Share examples of AI-assisted research breakthroughs.",
-    },
-    {
-        "topic": "The democratization of AI tools for creators",
-        "category": "ai",
-        "context": "AI tools are becoming accessible to more people. Discuss how this is enabling new forms of creativity.",
-    },
-]
-
 
 async def discover_trends(state: DiscoveryState) -> Command[Literal["process_tools", "select_topic"]]:
     """Search for trending news in target categories.
 
-    Uses Tavily news search to find current trending topics in AI, Science,
-    and Technology with a focus on positive developments.
+    Uses Tavily news search to find current trending topics
+    with a focus on positive developments.
     """
     system_prompt = TREND_DISCOVERY_SYSTEM_PROMPT.format(date=get_today_str())
     messages = [SystemMessage(content=system_prompt)] + list(state.get("messages", []))
@@ -64,7 +40,7 @@ async def discover_trends(state: DiscoveryState) -> Command[Literal["process_too
     if not state.get("discovered_topics"):
         messages.append(
             HumanMessage(
-                content="Search for the most interesting trending news today in AI, Science, and Technology. Focus on positive developments and breakthroughs."
+                content=f"Search for the most interesting trending news today in {get_topic_names_display()}. Focus on positive developments and breakthroughs."
             )
         )
 

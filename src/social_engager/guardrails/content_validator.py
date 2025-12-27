@@ -4,13 +4,11 @@ This module validates that generated tweets stay within allowed topics
 and maintain appropriate sentiment.
 """
 
-from typing import Literal
-
 from langchain_core.messages import HumanMessage, SystemMessage
 from pydantic import BaseModel, Field
 
 from social_engager.prompts import CONTENT_VALIDATION_PROMPT
-from social_engager.utils import ALLOWED_SENTIMENTS, ALLOWED_TOPICS, get_fast_model
+from social_engager.utils import ALLOWED_SENTIMENTS, ALLOWED_TOPICS, get_fast_model, get_topic_keywords
 
 # Configuration
 validation_model = get_fast_model()
@@ -157,13 +155,8 @@ def quick_topic_check(tweet: str, topic_category: str) -> tuple[bool, list[str]]
     errors = []
     tweet_lower = tweet.lower()
 
-    # Category-specific keywords that should be present
-    category_keywords = {
-        "ai": ["ai", "artificial intelligence", "machine learning", "ml", "llm", "gpt", "model", "neural"],
-        "science": ["science", "research", "study", "discovery", "experiment", "scientist", "breakthrough"],
-        "technology": ["tech", "technology", "software", "hardware", "digital", "innovation", "app", "platform"],
-        "positive_news": ["progress", "success", "breakthrough", "achievement", "advance", "improve", "benefit"],
-    }
+    # Get category keywords from central configuration
+    category_keywords = get_topic_keywords()
 
     # Check if any category keywords are present
     keywords = category_keywords.get(topic_category.lower(), [])
